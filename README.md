@@ -15,7 +15,6 @@
   - [コマンド系 (Windows, 一部Linuxユーザー)](#コマンド系-windows-一部linuxユーザー)
   - [GNUコマンド系 (Macユーザー)](#gnuコマンド系-macユーザー)
   - [gnuplot](#gnuplot)
-  - [python3](#python3)
 - [地震波形データの取得](#地震波形データの取得)
   - [HinetPyを使う場合](#hinetpyを使う場合)
   - [手動で行う場合](#手動で行う場合)
@@ -168,41 +167,6 @@ EOF
 @import "world.1.png"
 
 といった感じで呼び出せます ([スクリプト元](https://gnuplot.sourceforge.net/demo/world.html)と[データ元](https://github.com/gnuplot/gnuplot/blob/master/demo/world.cor)).
-
-### python3
-これも同様な理由で, 例えばシェルスクリプト内で分散を計算するとなると非常に厄介ですが, gnuplotの例のようにpythonを呼び出して計算させると楽です. 
-
-pythonの環境構築は「[anaconda](https://www.anaconda.com/download)」か「pip」のどちらかを選択し, 両環境を混ぜないのが吉. 個人的には[miniconda](https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html)を使い, conda経由のパッケージとpip経由のパッケージの仮想環境を使い分けるのが良さげ. 
-
-pipの提供するパッケージのみでよければ, Homebrewから 
-```sh
-brew install python3
-```
-と打つとpython3が入り, 各ライブラリは
-```sh
-python3 -m pip install [ライブラリ名]
-```
-で入ります. 
-
-個人的なオススメは[Numba](https://numba.pydata.org/). これはJITコンパイラの一つで, 非常に簡単に処理を高速化できる. pythonはインタープリタ言語ゆえスクリプトを1行づつ逐次的にコンパイルするため, 変数の型設定を自由にできるというメリットの反面, 特にfor文などでは変数の型をループごとに確認するため処理が遅い. よって理論上, 変数の設定を静的にして実行前にコンパイルしておくことで, Cやfortranと遜色なく速度が出る. 
-
-numbaは例えば, 以下のような多重ループを含む自作関数の前に定義する. 
-
-```python
-import numba as nb
-
-@nb.njit # この行を追加するだけ
-def sample():
-    k = 0
-    for i in range(100000000):
-        k += i
-    return k
-```
-
-以上の例だと, 「@njit」という1行を足すだけで7.84秒 &rarr; 0.0647秒まで高速化できた. 重要なのは「<u><b>n</b></u>jit」と書くことで, この「n」は「no python-object」(= 型設定の自由度の高い「python-object型」を使わない)の意です. 入力する型が定まってない場合, 「@nb.jit」とすれば必要に応じて「python-object」を使うが実行速度は上がらない. 
-
-Numbaも万能ではなく, 自作関数内に対応していない関数などを含むとエラーを返すため, 頑張って対処する. 使用できるNumpy関数は[Supported NumPy features](https://numba.pydata.org/numba-doc/dev/reference/numpysupported.html)を参照.
-
 
 ## 地震波形データの取得
 
