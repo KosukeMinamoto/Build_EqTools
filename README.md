@@ -164,7 +164,7 @@ plot 'world.dat' with lines lc rgb "blue" ,
 EOF
 ~~~
 
-@import "world.1.png"
+![](world.1.png)
 
 といった感じで呼び出せます ([スクリプト元](https://gnuplot.sourceforge.net/demo/world.html)と[データ元](https://github.com/gnuplot/gnuplot/blob/master/demo/world.cor)).
 
