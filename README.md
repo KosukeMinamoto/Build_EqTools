@@ -41,8 +41,6 @@
 
 <!-- /code_chunk_output -->
 
-@import "mystyle.less"
-
 ## 本資料について
 
 * 地震波形を扱う上で必要となる**環境構築についての**備忘録です. 
